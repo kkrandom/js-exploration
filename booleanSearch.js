@@ -1,7 +1,19 @@
 'use strict'
 
 function search(searchString, profiles) {
-	// filter =
+	function parseSearchString(searchString) {
+		//TODO: Replace through dictionary
+		searchString = searchString.replace(/AND/g, '&&')
+		searchString = searchString.replace(/OR/g, '||')
+		searchString = searchString.replace(/NOT/g, '!')
+
+		const re = /[a-z]+/g
+		searchString = searchString.replace(re, (match) => {
+			return `profile.skills.includes('${match}')`
+		})
+
+		return searchString
+	}
 
 	const result = []
 	profiles.forEach((profile) => {
@@ -9,29 +21,7 @@ function search(searchString, profiles) {
 			result.push(profile)
 		}
 	})
-	// profiles.forEach((profile) => {
-	// 	if (
-	// 		!(profile.skills.includes('java') && profile.skills.includes('js')) ||
-	// 		profile.skills.includes('backend')
-	// 	) {
-	// 		result.push(profile)
-	// 	}
-	// })
 	return result
-}
-
-function parseSearchString(searchString) {
-	//TODO: Replace through dictionary
-	searchString = searchString.replace(/AND/g, '&&')
-	searchString = searchString.replace(/OR/g, '||')
-	searchString = searchString.replace(/NOT/g, '!')
-
-	const re = /[a-z]+/g
-	searchString = searchString.replace(re, (match) => {
-		return `profile.skills.includes('${match}')`
-	})
-
-	return searchString
 }
 
 function presentResults(profiles) {
@@ -66,9 +56,10 @@ let profiles = [
 ]
 
 // Main
+;(function main() {
+	// let searchString = 'NOT(java AND js) OR backend'
+	let searchString = 'java AND aws'
 
-// let searchString = 'NOT(java AND js) OR backend'
-let searchString = 'java'
-
-const results = search(searchString, profiles)
-console.log(presentResults(results))
+	const results = search(searchString, profiles)
+	console.log(presentResults(results))
+})()
