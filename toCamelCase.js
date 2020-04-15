@@ -1,10 +1,10 @@
 'use strict'
 
-//TODO: Fix single letter word cases, e.g. 'CONTRE L'INCENDIE' or 'Come A Gain'
-
 // Enter you strings for camelCasing here, one string per line
 const camelCaseMe = `
 LUTTE CONTRE L'INCENDIE
+LUTTE CONTRE L\`INCENDIE
+LUTTE CONTRE L"INCENDIE
 Come A Gain
 Hans Dampf
 `
@@ -14,12 +14,10 @@ Hans Dampf
  * @param {string} word - the word you want to camelCase
  */
 function toCamelCase(word) {
-	// const re = /(\W|_)+/
-	let wordNoNumbers = word.replace(/\d+/g, '')
-	const re = /(?:_|\W)+/
-	let wordsNoNumbers = wordNoNumbers.split(re)
+	let wordNoSpecial = word.replace(/(\d|\'|\`|\")+/g, '')
+	let words = wordNoSpecial.split(/(?:_|\W)+/)
 
-	const wordsWithoutEmpty = wordsNoNumbers.filter((element) => element !== '')
+	const wordsWithoutEmpty = words.filter((element) => element !== '')
 	const wordsNew = wordsWithoutEmpty.map((element, index) => {
 		const first = element[0]
 		const firstLetter = index === 0 ? first.toLowerCase() : first.toUpperCase()
@@ -46,11 +44,12 @@ function test() {
 	console.log(toCamelCase('  12  d12mpF'))
 	console.log(toCamelCase('  12  12mpF'))
 	console.log(toCamelCase('Hans_   _Dampf    Hans_   _Dampf'))
+	console.log(toCamelCase('hansDampf'))
 	console.log('*** TEST END *****')
 	// console.log('\n')
 }
+// test()
 
-test()
 ;(function main() {
 	const arr = camelCaseMe.split(/\n/)
 	arr.forEach((element) => {
